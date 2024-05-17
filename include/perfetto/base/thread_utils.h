@@ -34,6 +34,8 @@ __declspec(dllimport) unsigned long __stdcall GetCurrentThreadId();
 #include <sys/syscall.h>
 #include <sys/types.h>
 #include <unistd.h>
+#elif PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+#include <sys/thr.h>
 #else
 #include <pthread.h>
 #endif
