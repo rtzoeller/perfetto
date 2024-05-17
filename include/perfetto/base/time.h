@@ -212,6 +212,10 @@ inline TimeNanos GetWallTimeNs() {
   return GetTimeInternalNs(kWallTimeClockSource);
 }
 
+#ifndef CLOCK_MONOTONIC_RAW
+#define CLOCK_MONOTONIC_RAW CLOCK_MONOTONIC
+#endif
+
 inline TimeNanos GetWallTimeRawNs() {
   return GetTimeInternalNs(CLOCK_MONOTONIC_RAW);
 }
