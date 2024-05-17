@@ -467,6 +467,7 @@ TEST_F(UnixSocketTest, GetSockAddrTcp6) {
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||   \
     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_MAC)
 TEST_F(UnixSocketTest, GetSockAddrUnixLinked) {
   TempDir tmp_dir = TempDir::Create();
@@ -488,7 +489,8 @@ TEST_F(UnixSocketTest, GetSockAddrUnixLinked) {
 #endif
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
+    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
 TEST_F(UnixSocketTest, GetSockAddrUnixAbstract) {
   StackString<128> sock_name("@perfetto_sock_%d_%d", getpid(), rand() % 100000);
 
@@ -1063,6 +1065,7 @@ TEST_F(UnixSocketTest, SetsCloexec) {
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||   \
     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_MAC)
 
 // Regression test for b/239725760.
@@ -1088,7 +1091,8 @@ TEST_F(UnixSocketTest, Sockaddr_FilesystemLinked) {
 #endif  // OS_LINUX || OS_ANDROID || OS_MAC
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
+    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
 // Regression test for b/239725760.
 // Abstract sockets are not supported on Mac OS.
 TEST_F(UnixSocketTest, Sockaddr_AbstractUnix) {

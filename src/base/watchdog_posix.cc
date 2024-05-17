@@ -172,8 +172,9 @@ void Watchdog::Start() {
     PERFETTO_DCHECK(!enabled_);
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
-    // Kick the thread to start running but only on Android or Linux.
+    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+    // Kick the thread to start running but only on platforms with timerfd.
     timer_fd_.reset(
         timerfd_create(CLOCK_MONOTONIC, TFD_CLOEXEC | TFD_NONBLOCK));
     if (!timer_fd_) {

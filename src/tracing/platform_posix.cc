@@ -18,6 +18,7 @@
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||   \
     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_FUCHSIA) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
 
@@ -118,6 +119,7 @@ std::string PlatformPosix::GetCurrentProcessName() {
 #elif PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
   return std::string(getprogname());
 #else
+// TODO: Implement with syscall
   return "unknown_producer";
 #endif
 }
@@ -131,4 +133,4 @@ Platform* Platform::GetDefaultPlatform() {
 }
 
 }  // namespace perfetto
-#endif  // OS_LINUX || OS_ANDROID || OS_APPLE || OS_FUCHSIA
+#endif  // OS_LINUX || OS_ANDROID || OS_FREEBSD || OS_FUCHSIA || OS_APPLE

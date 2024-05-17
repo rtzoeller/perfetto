@@ -21,6 +21,7 @@
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||   \
     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
 #include <sys/mman.h>
 #endif
@@ -72,6 +73,7 @@ TraceBlob TraceBlob::FromMmap(base::ScopedMmap mapped) {
 TraceBlob TraceBlob::FromMmap(void* data, size_t size) {
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||   \
     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
   PERFETTO_CHECK(data);
   TraceBlob blob(Ownership::kNullOrMmaped, static_cast<uint8_t*>(data), size);

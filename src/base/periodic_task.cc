@@ -25,7 +25,8 @@
 #include "perfetto/ext/base/file_utils.h"
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    (PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) && __ANDROID_API__ >= 19)
+    (PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) && __ANDROID_API__ >= 19) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
 #include <sys/timerfd.h>
 #endif
 
@@ -45,7 +46,8 @@ uint32_t GetNextDelayMs(const TimeMillis& now_ms,
 
 ScopedPlatformHandle CreateTimerFd(const PeriodicTask::Args& args) {
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    (PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) && __ANDROID_API__ >= 19)
+    (PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) && __ANDROID_API__ >= 19) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
   ScopedPlatformHandle tfd(
       timerfd_create(CLOCK_BOOTTIME, TFD_CLOEXEC | TFD_NONBLOCK));
   uint32_t phase_ms = GetNextDelayMs(GetBootTimeMs(), args);

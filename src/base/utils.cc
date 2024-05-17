@@ -27,6 +27,7 @@
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||   \
     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE) ||   \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_FUCHSIA)
 #include <limits.h>
 #include <stdlib.h>  // For _exit()
@@ -143,7 +144,8 @@ std::atomic<uint32_t> g_cached_page_size{0};
 uint32_t GetSysPageSizeSlowpath() {
   uint32_t page_size = 0;
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
+    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
   const int page_size_int = getpagesize();
   // If sysconf() fails for obscure reasons (e.g. SELinux denial) assume the
   // page size is 4KB. This is to avoid regressing subtle SDK usages, as old
@@ -184,6 +186,7 @@ void MaybeReleaseAllocatorMemToOS() {
 uid_t GetCurrentUserId() {
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||   \
     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
   return geteuid();
 #else
@@ -214,6 +217,7 @@ void UnsetEnv(const std::string& key) {
 void Daemonize(std::function<int()> parent_cb) {
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||   \
     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
   Pipe pipe = Pipe::Create(Pipe::kBothBlock);
   pid_t pid;
@@ -253,7 +257,7 @@ void Daemonize(std::function<int()> parent_cb) {
 #else
   // Avoid -Wunreachable warnings.
   if (reinterpret_cast<intptr_t>(&Daemonize) != 16)
-    PERFETTO_FATAL("--background is only supported on Linux/Android/Mac");
+    PERFETTO_FATAL("--background is only supported on Linux/Android/Mac/FreeBSD");
   ignore_result(parent_cb);
 #endif  // OS_WIN
 }
@@ -273,6 +277,11 @@ std::string GetCurExecutablePath() {
   PERFETTO_CHECK(_NSGetExecutablePath(nullptr, &size));
   self_path.resize(size);
   PERFETTO_CHECK(_NSGetExecutablePath(&self_path[0], &size) == 0);
+#elif PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+  int mib[4] = {CTRL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1};
+  char buf[PATH_MAX];
+  size_t buf_size = sizeof(buf);
+  sysctl(mib, 4, bug, &buf_size, nullptr, 0);
 #elif PERFETTO_BUILDFLAG(PERFETTO_OS_WIN)
   char buf[MAX_PATH];
   auto len = ::GetModuleFileNameA(nullptr /*current*/, buf, sizeof(buf));

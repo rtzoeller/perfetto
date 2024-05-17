@@ -51,6 +51,13 @@ using PlatformThreadId = pid_t;
 inline PlatformThreadId GetThreadId() {
   return static_cast<pid_t>(syscall(__NR_gettid));
 }
+#elif PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+using PlatformThreadId = long;
+inline PlatformThreadId GetThreadId() {
+  long tid;
+  thr_self(&tid);
+  return tid;
+}
 #elif PERFETTO_BUILDFLAG(PERFETTO_OS_FUCHSIA)
 using PlatformThreadId = zx_koid_t;
 // Not inlined because the result is cached internally.

@@ -145,6 +145,7 @@ TEST(UtilsTest, ReadWritePlatformHandle) {
 // https://fxbug.dev/42105390 .
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||   \
     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
 TEST(UtilsTest, EintrWrapper) {
   Pipe pipe = Pipe::Create();
