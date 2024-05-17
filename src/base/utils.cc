@@ -39,6 +39,10 @@
 #include <mach/vm_page_size.h>
 #endif
 
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+#include <sys/sysctl.h>
+#endif
+
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_WIN)
 #include <Windows.h>
 #include <io.h>
