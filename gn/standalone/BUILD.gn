@@ -320,6 +320,12 @@ config("default") {
     ]
   }
 
+  if (is_freebsd) {
+    libs += [
+      "pthread",
+    ]
+  }
+
   if (is_win && !is_clang) {
     # When using MSVC we need to manually pass the include dirs. clang-cl.exe
     # doesn't need them because it's smart enough to figure out the right path
