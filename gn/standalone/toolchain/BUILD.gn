@@ -283,6 +283,9 @@ template("gcc_like_toolchain") {
       if (is_mac && ar != "suppress_unused_ar_variable_warning") {
         rspfile_content = "{{inputs_newline}}"
         command = "rm -f {{output}} && libtool -static {{arflags}} -o {{output}} -filelist $rspfile"
+      } else if (is_freebsd && ar != "suppress_unused_ar_variable_warning") {
+        rspfile_content = "{{inputs}}"
+        command = "rm -f {{output}} && libtool --mode=link --tag=CXX $cc -static {{arflags}} -o {{output}} -filelist $rspfile"
       } else {
         rspfile_content = "{{inputs}}"
         command = "rm -f {{output}} && $ar rcsD {{output}} @$rspfile"
