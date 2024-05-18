@@ -1095,8 +1095,7 @@ TEST_F(UnixSocketTest, Sockaddr_FilesystemLinked) {
 #endif  // OS_LINUX || OS_ANDROID || OS_MAC
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
 // Regression test for b/239725760.
 // Abstract sockets are not supported on Mac OS.
 TEST_F(UnixSocketTest, Sockaddr_AbstractUnix) {
