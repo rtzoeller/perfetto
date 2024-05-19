@@ -38,6 +38,8 @@ extern "C" {
 
 #if defined(__linux__) || defined(__native_client__)
 typedef pid_t PerfettoThreadId;
+#elif defined(__FreeBSD__)
+typedef long PerfettoThreadId;
 #elif defined(__Fuchsia__)
 typedef zx_koid_t PerfettoThreadId;
 #elif defined(__APPLE__) || defined(_WIN32)
