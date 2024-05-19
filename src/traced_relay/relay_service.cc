@@ -333,7 +333,8 @@ std::string RelayService::GetMachineIdHint(
     const char* dev_path = "/dev";
     // Generate a pseudo-unique identifier for the current machine.
     // Source 1: system boot timestamp from the creation time of /dev inode.
-#if PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
     // Mac or iOS, just use stat(2).
     struct stat stat_buf {};
     int rc = PERFETTO_EINTR(stat(dev_path, &stat_buf));
