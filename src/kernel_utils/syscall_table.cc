@@ -18,8 +18,7 @@
 #include "perfetto/base/build_config.h"
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
 #include <sys/utsname.h>
 #endif
 
@@ -66,8 +65,7 @@ SyscallTable SyscallTable::FromCurrentArch() {
   Architecture arch = Architecture::kUnknown;
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
   struct utsname uname_info;
   if (uname(&uname_info) == 0) {
     arch = ArchFromString(uname_info.machine);
