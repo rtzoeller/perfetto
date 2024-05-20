@@ -109,7 +109,8 @@ TEST(PeriodicTaskTest, FallbackIfTimerfdFails) {
   args.task = [&] {
     ++num_callbacks;
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
+    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
     if (num_callbacks == 3 && pt.timer_fd_for_testing() > 0) {
       ScopedFile dev_null = OpenFile("/dev/null", O_RDONLY);
       dup2(*dev_null, pt.timer_fd_for_testing());
