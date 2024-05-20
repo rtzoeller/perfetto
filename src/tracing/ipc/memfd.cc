@@ -18,12 +18,8 @@
 
 #include <errno.h>
 
-#define PERFETTO_MEMFD_ENABLED()             \
-  PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
-  PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||   \
-  PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
-
-#if PERFETTO_MEMFD_ENABLED()
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX)
 
 #include <stdio.h>
 #include <string.h>
@@ -81,8 +77,18 @@ base::ScopedFile CreateMemfd(const char* name, unsigned int flags) {
 }
 }  // namespace perfetto
 
-#else  // PERFETTO_MEMFD_ENABLED()
+#elif PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
 
+namespace perfetto {
+bool HasMemfdSupport() {
+  return true;
+}
+base::ScopedFile CreateMemfd(const char* name, unsigned int flags) {
+  return base::ScopedFile(memfd_create(name, flags));
+}
+}  // namespace perfetto
+
+#else
 namespace perfetto {
 bool HasMemfdSupport() {
   return false;
@@ -93,4 +99,4 @@ base::ScopedFile CreateMemfd(const char*, unsigned int) {
 }
 }  // namespace perfetto
 
-#endif  // PERFETTO_MEMFD_ENABLED()
+#endif

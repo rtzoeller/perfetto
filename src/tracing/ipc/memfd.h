@@ -21,6 +21,12 @@
 
 #include "perfetto/ext/base/scoped_file.h"
 
+
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+#include <fcntl.h>
+#include <sys/mman.h>
+
+#else
 // Some android build bots use a sysroot that doesn't support memfd when
 // compiling for the host, so we define the flags we need ourselves.
 
@@ -38,6 +44,8 @@
 #define F_SEAL_SHRINK 0x0002
 #define F_SEAL_GROW 0x0004
 #define F_SEAL_WRITE 0x0008
+#endif
+
 #endif
 
 namespace perfetto {
