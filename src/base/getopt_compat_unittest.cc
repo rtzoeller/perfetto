@@ -74,7 +74,8 @@ class GetoptCompatTest : public testing::Test {
     // When calling getopt() several times, MacOS requires that optind is reset
     // to 1, while Linux requires optind to be reset to 0. Also MacOS requires
     // optreset to be set as well.
-#if PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
     impl.optind = 1;
     optreset = 1;  // It has no corresponding variable in other OSes.
 #else
