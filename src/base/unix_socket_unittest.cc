@@ -493,8 +493,7 @@ TEST_F(UnixSocketTest, GetSockAddrUnixLinked) {
 #endif
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
 TEST_F(UnixSocketTest, GetSockAddrUnixAbstract) {
   StackString<128> sock_name("@perfetto_sock_%d_%d", getpid(), rand() % 100000);
 
@@ -1069,7 +1068,6 @@ TEST_F(UnixSocketTest, SetsCloexec) {
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) ||   \
     PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD) || \
     PERFETTO_BUILDFLAG(PERFETTO_OS_MAC)
 
 // Regression test for b/239725760.
@@ -1161,7 +1159,9 @@ TEST_F(UnixSocketTest, GetSockFamily) {
   ASSERT_EQ(GetSockFamily(""), SockFamily::kUnspec);
   ASSERT_EQ(GetSockFamily("/path/to/sock"), SockFamily::kUnix);
   ASSERT_EQ(GetSockFamily("local_dir_sock"), SockFamily::kUnix);
+#if !PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
   ASSERT_EQ(GetSockFamily("@abstract"), SockFamily::kUnix);
+#endif
   ASSERT_EQ(GetSockFamily("0.0.0.0:80"), SockFamily::kInet);
   ASSERT_EQ(GetSockFamily("127.0.0.1:80"), SockFamily::kInet);
   ASSERT_EQ(GetSockFamily("[effe::acca]:1234"), SockFamily::kInet6);
@@ -1179,7 +1179,9 @@ TEST_F(UnixSocketTest, ShmemSupported) {
   ASSERT_EQ(SockShmemSupported(""), false);
   ASSERT_EQ(SockShmemSupported("/path/to/sock"), true);
   ASSERT_EQ(SockShmemSupported("local_dir_sock"), true);
+#if !PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
   ASSERT_EQ(SockShmemSupported("@abstract"), true);
+#endif
   ASSERT_EQ(SockShmemSupported("0.0.0.0:80"), false);
   ASSERT_EQ(SockShmemSupported("127.0.0.1:80"), false);
   ASSERT_EQ(SockShmemSupported("[effe::acca]:1234"), false);
