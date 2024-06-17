@@ -286,6 +286,7 @@ std::string GetCurExecutablePath() {
   char buf[PATH_MAX];
   size_t buf_size = sizeof(buf);
   sysctl(mib, 4, buf, &buf_size, nullptr, 0);
+  self_path = std::string(buf, buf_size);
 #elif PERFETTO_BUILDFLAG(PERFETTO_OS_WIN)
   char buf[MAX_PATH];
   auto len = ::GetModuleFileNameA(nullptr /*current*/, buf, sizeof(buf));
