@@ -1480,7 +1480,8 @@ TEST(CpuReaderTest, SysEnterEvent) {
 
 // MacOS fails on this ...but MacOS will never use cpu_reader so it's
 // not a big problem.
-#if PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
 #define MAYBE_SysExitEvent DISABLED_SysExitEvent
 #else
 #define MAYBE_SysExitEvent SysExitEvent
