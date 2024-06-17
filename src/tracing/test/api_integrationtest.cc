@@ -4639,8 +4639,14 @@ TEST_P(PerfettoApiTest, QueryServiceState) {
         EXPECT_TRUE(state.ParseFromArray(result.service_state_data.data(),
                                          result.service_state_data.size()));
         EXPECT_EQ(1, state.producers_size());
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+        // COMMLEN isn't long enough, so the process name is truncated
+        EXPECT_NE(std::string::npos,
+                  state.producers()[0].name().find("perfetto_integratio"));
+#else
         EXPECT_NE(std::string::npos,
                   state.producers()[0].name().find("integrationtest"));
+#endif
         bool found_ds = false;
         for (const auto& ds : state.data_sources())
           found_ds |= ds.ds_descriptor().name() == "query_test_data_source";
@@ -4656,8 +4662,14 @@ TEST_P(PerfettoApiTest, QueryServiceState) {
   EXPECT_TRUE(state.ParseFromArray(result.service_state_data.data(),
                                    result.service_state_data.size()));
   EXPECT_EQ(1, state.producers_size());
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+  // COMMLEN isn't long enough, so the process name is truncated
+  EXPECT_NE(std::string::npos,
+            state.producers()[0].name().find("perfetto_integratio"));
+#else
   EXPECT_NE(std::string::npos,
             state.producers()[0].name().find("integrationtest"));
+#endif
   bool found_ds = false;
   for (const auto& ds : state.data_sources())
     found_ds |= ds.ds_descriptor().name() == "query_test_data_source";

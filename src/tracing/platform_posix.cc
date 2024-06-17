@@ -31,6 +31,12 @@
 #include <pthread.h>
 #include <stdlib.h>
 
+#if PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+#include <sys/types.h>
+#include <sys/user.h>
+#include <libutil.h>
+#endif
+
 namespace perfetto {
 
 namespace {
@@ -118,8 +124,15 @@ std::string PlatformPosix::GetCurrentProcessName() {
   return cmdline.substr(0, cmdline.find('\0'));
 #elif PERFETTO_BUILDFLAG(PERFETTO_OS_APPLE)
   return std::string(getprogname());
+#elif PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
+  struct kinfo_proc* proc = kinfo_getproc(GetCurrentProcessId());
+  if (proc) {
+    std::string name(proc->ki_comm);
+    free(proc);
+    return name;
+  }
+  return "unknown_producer";
 #else
-// TODO: Implement with syscall
   return "unknown_producer";
 #endif
 }

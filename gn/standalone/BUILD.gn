@@ -323,6 +323,7 @@ config("default") {
   if (is_freebsd) {
     libs += [
       "pthread",
+      "util",
     ]
   }
 
