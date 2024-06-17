@@ -401,7 +401,8 @@ class PERFETTO_EXPORT_COMPONENT UnixSocket {
 #endif
 
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
+    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
   // Process ID of the peer, as returned by the kernel. If the client
   // disconnects and the socket goes into the kDisconnected state, it
   // retains the pid of the last peer.
@@ -450,7 +451,8 @@ class PERFETTO_EXPORT_COMPONENT UnixSocket {
   uid_t peer_uid_ = kInvalidUid;
 #endif
 #if PERFETTO_BUILDFLAG(PERFETTO_OS_LINUX) || \
-    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID)
+    PERFETTO_BUILDFLAG(PERFETTO_OS_ANDROID) || \
+    PERFETTO_BUILDFLAG(PERFETTO_OS_FREEBSD)
   pid_t peer_pid_ = kInvalidPid;
 #endif
   EventListener* const event_listener_;
